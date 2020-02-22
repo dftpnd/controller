@@ -38,7 +38,7 @@ class MessagingSample extends LitElement {
         await this._localConnection.addIceCandidate(e.candidate);
       });
 
-      window.localChannel = this._localChannel = this.§
+      window.localChannel = this._localChannel = this._localConnection
           .createDataChannel('messaging-channel', dataChannelParams);
       this._localChannel.binaryType = 'arraybuffer';
       this._localChannel.addEventListener('open', () => {
@@ -107,10 +107,6 @@ class MessagingSample extends LitElement {
 
   render() {
     return html`<section>
-                    <style>
-                    @import "../../../css/main.css";
-                    @import "main.css";
-                </style>
                     <div>
                         <button ?disabled="${this.connected}" @click="${this.connect.bind(this)}">Connect</button>
                         <button ?disabled="${!this.connected}" @click="${this.disconnect.bind(this)}">Disconnect</button>

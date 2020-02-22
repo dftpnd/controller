@@ -1,4 +1,5 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const PoweredUP = require("node-poweredup");
@@ -59,12 +60,7 @@ poweredUP.on("discover", async (hub) => {
         rotationAction = MakeQuerablePromise(
           motorC.gotoAngle(ANGLE, 10)
           );
-        debugger;
       }
-
-
-
-      
 
       if (M1 !== 0 && !state.M1) {
         state.M1 = M1;
@@ -89,18 +85,15 @@ poweredUP.on("discover", async (hub) => {
   });
 });
 
+app.use(express.static('public'))
 
 app.get('/', function(_, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-
 app.get('/webrtc', function(_, res){
   res.sendFile(__dirname + '/webrtc.html');
 });
-
-
-
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
