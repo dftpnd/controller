@@ -5,7 +5,6 @@ const PoweredUP = require("node-poweredup");
 const poweredUP = new PoweredUP.PoweredUP();
 
 function MakeQuerablePromise(promise) {
-  debugger;
   // Don't create a wrapper for promises that can already be queried.
   if (promise.isResolved) return promise;
 
@@ -55,8 +54,6 @@ poweredUP.on("discover", async (hub) => {
       console.log('M1', M1)
       const ANGLE = Math.round((args.AXES[0] + 1) * 89);
 
-      debugger;
-
       if (!rotationAction || rotationAction.isResolved()) {
         console.log('ANGLE', ANGLE);
         rotationAction = MakeQuerablePromise(
@@ -95,6 +92,11 @@ poweredUP.on("discover", async (hub) => {
 
 app.get('/', function(_, res){
   res.sendFile(__dirname + '/index.html');
+});
+
+
+app.get('/webrtc', function(_, res){
+  res.sendFile(__dirname + '/webrtc.html');
 });
 
 
