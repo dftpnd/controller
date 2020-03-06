@@ -84,7 +84,15 @@ app.get('/', function (req, res) {
         //     '!', 'nvegltransform',
         //     '!', 'tcpclientsink', ' host=localhost', ' port=' + tcpServer.address().port];
 
-        var gstMuxer = child.spawn(cmd, args2);
+        /**
+         * 
+         * 
+         * tcpclientsink host=localhost port=9001
+         * 
+            $ gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1' ! nvvidconv flip-method=0 ! nvvidconv ! nvegltransform ! tcpclientsink host=localhost port=9001
+         */
+
+        var gstMuxer = child.spawn(cmd, args);
 
         gstMuxer.stderr.on('data', onSpawnError);
         gstMuxer.on('exit', onSpawnExit);
