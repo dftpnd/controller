@@ -47,22 +47,10 @@ app.get('/', function (req, res) {
                 '!', 'tcpclientsink', 'host=localhost',
                 'port=' + tcpServer.address().port];
 
-        var args2 =
-        ['nvarguscamerasrc',
-            '!', 'video/x-raw,framerate=30/1,width=320,height=240,format=NV12',
-            '!', 'videoconvert',
-            '!', 'queue', 'leaky=1',
-            '!', 'vp8enc',
-            '!', 'queue', 'leaky=1',
-            '!', 'm.', 'autoaudiosrc',
-            '!', 'queue', 'leaky=1',
-            '!', 'audioconvert',
-            '!', 'vorbisenc',
-            '!', 'queue', 'leaky=1',
-            '!', 'm.', 'webmmux', 'name=m', 'streamable=true',
-            '!', 'queue', 'leaky=1',
-            '!', 'tcpclientsink', 'host=localhost',
-            'port=' + tcpServer.address().port];
+            var args2 =
+            ['nvarguscamerasrc',
+                '!', 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1, format=NV12',
+                '!', 'tcpclientsink', 'host=localhost', 'port=' + tcpServer.address().port];
     
 
         //gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw,width=960, height=616' ! nvvidconv ! nvegltransform ! 
@@ -92,7 +80,7 @@ app.get('/', function (req, res) {
             $ gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1' ! nvvidconv flip-method=0 ! nvvidconv ! nvegltransform ! tcpclientsink host=localhost port=9001
          */
 
-        var gstMuxer = child.spawn(cmd, args);
+        var gstMuxer = child.spawn(cmd, args2);
 
         gstMuxer.stderr.on('data', onSpawnError);
         gstMuxer.on('exit', onSpawnExit);
