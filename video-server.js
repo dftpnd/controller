@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
 
                 var args2 =
                 ['nvarguscamerasrc',
-                    '!', 'video/x-raw,framerate=30/1,width=320,height=240',
+                    '!', 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1',
                     '!', 'videoconvert',
                     '!', 'queue', 'leaky=1',
                     '!', 'vp8enc',
@@ -64,7 +64,7 @@ app.get('/', function (req, res) {
                     '!', 'tcpclientsink', 'host=localhost',
                     'port=' + tcpServer.address().port];
 
-        var gstMuxer = child.spawn(cmd, args);
+        var gstMuxer = child.spawn(cmd, args2);
 
         gstMuxer.stderr.on('data', onSpawnError);
         gstMuxer.on('exit', onSpawnExit);
