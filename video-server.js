@@ -50,12 +50,7 @@ app.get('/', function (req, res) {
                 var args2 =
                 ['nvarguscamerasrc',
                     '!', 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1',
-                    '!', 'videoconvert',
-                    '!', 'audioconvert',
-                    '!', 'vorbisenc',
-                    '!', 'queue', 'leaky=1',
                     '!', 'm.', 'webmmux', 'name=m', 'streamable=true',
-                    '!', 'queue', 'leaky=1',
                     '!', 'tcpclientsink', 'host=localhost',
                     'port=' + tcpServer.address().port];
 
