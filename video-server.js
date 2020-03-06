@@ -49,8 +49,13 @@ app.get('/', function (req, res) {
 
             var args2 =
             ['nvarguscamerasrc',
-                '!', 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1, format=NV12',
+                '!', 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1',
                 '!', 'nvvidconv',
+                '!', 'queue', 'leaky=1',
+                '!', 'vp8enc',
+                '!', 'queue', 'leaky=1',
+                '!', 'm.', 'nvarguscamerasrc',
+                '!', 'queue', 'leaky=1',
                 '!', 'nvegltransform',
                 '!', 'tcpclientsink', 'host=localhost', 'port=' + tcpServer.address().port];
     
