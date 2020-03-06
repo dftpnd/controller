@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
 
         var args2 =
         ['nvarguscamerasrc',
-            '!', 'video/x-raw,framerate=30/1,width=320,height=240',
+            '!', 'video/x-raw,framerate=30/1,width=320,height=240,format=NV12',
             '!', 'videoconvert',
             '!', 'queue', 'leaky=1',
             '!', 'vp8enc',
