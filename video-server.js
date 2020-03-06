@@ -47,6 +47,23 @@ app.get('/', function (req, res) {
                 '!', 'tcpclientsink', 'host=localhost',
                 'port=' + tcpServer.address().port];
 
+                var args2 =
+                ['nvarguscamerasrc',
+                    '!', 'video/x-raw,framerate=30/1,width=320,height=240',
+                    '!', 'videoconvert',
+                    '!', 'queue', 'leaky=1',
+                    '!', 'vp8enc',
+                    '!', 'queue', 'leaky=1',
+                    '!', 'm.', 'autoaudiosrc',
+                    '!', 'queue', 'leaky=1',
+                    '!', 'audioconvert',
+                    '!', 'vorbisenc',
+                    '!', 'queue', 'leaky=1',
+                    '!', 'm.', 'webmmux', 'name=m', 'streamable=true',
+                    '!', 'queue', 'leaky=1',
+                    '!', 'tcpclientsink', 'host=localhost',
+                    'port=' + tcpServer.address().port];
+
         var gstMuxer = child.spawn(cmd, args);
 
         gstMuxer.stderr.on('data', onSpawnError);
