@@ -91,13 +91,6 @@ app.get('/', function(_, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/webrtc', function(_, res){
-  res.sendFile(__dirname + '/webrtc.html');
-});
-
-app.get('/client', function(_, res){
-  res.sendFile(__dirname + '/client.html');
-});
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
