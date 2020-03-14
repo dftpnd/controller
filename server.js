@@ -87,7 +87,7 @@ poweredUP.on("discover", async (hub) => {
 
 app.use(express.static('public'))
 
-app.get('/', function(_, res){
+app.get('/test', function(_, res){
   res.sendFile(__dirname + '/index.html');
 });
 
