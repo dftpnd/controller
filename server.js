@@ -65,7 +65,7 @@ poweredUP.on("discover", async (hub) => {
       // console.log('ANGLE', ANGLE)
 
       if (!rotationAction || rotationAction.isResolved()) {
-        console.log('ANGLE', ANGLE);
+        console.log('dirtyAngel', dirtyAngel);
         rotationAction = MakeQuerablePromise(motorC.gotoAngle(pureAngel(dirtyAngel), 10));
       }
 
