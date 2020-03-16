@@ -61,15 +61,13 @@ poweredUP.on("discover", async (hub) => {
       const { M1, M2, AXES } = args;
       const dirtyAngel =  Math.round((AXES[0] + 1) * 89)
 
-      pureAngel(dirtyAngel)
-      console.log('ANGLE', ANGLE)
+      
+      // console.log('ANGLE', ANGLE)
 
-      // if (!rotationAction || rotationAction.isResolved()) {
-      //   console.log('ANGLE', ANGLE);
-      //   rotationAction = MakeQuerablePromise(
-      //     motorC.gotoAngle(ANGLE, 10)
-      //     );
-      // }
+      if (!rotationAction || rotationAction.isResolved()) {
+        console.log('ANGLE', ANGLE);
+        rotationAction = MakeQuerablePromise(motorC.gotoAngle(pureAngel(dirtyAngel), 10));
+      }
 
       if (M1 !== 0 && !state.M1) {
         state.M1 = M1;
