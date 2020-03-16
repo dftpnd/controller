@@ -22,6 +22,13 @@ function MakeQuerablePromise(promise) {
   return result;
 }
 
+const pureAngel = (dirtyAngel) => {
+  if(dirtyAngel > 91 || dirtyAngel < 100){
+    return 89;
+  }
+  return dirtyAngel - 7;
+}
+
 poweredUP.on("discover", async (hub) => { 
   console.log(`Discovered ${hub.name}!`);
   // hub.batteryLevel
@@ -52,7 +59,9 @@ poweredUP.on("discover", async (hub) => {
 
     socket.on('action', function(args) {
       const { M1, M2, AXES } = args;
-      const ANGLE =  Math.round((AXES[0] + 1) * 89)
+      const dirtyAngel =  Math.round((AXES[0] + 1) * 89)
+
+      pureAngel(dirtyAngel)
       console.log('ANGLE', ANGLE)
 
       // if (!rotationAction || rotationAction.isResolved()) {
