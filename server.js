@@ -51,16 +51,16 @@ poweredUP.on("discover", async (hub) => {
     };
 
     socket.on('action', function(args) {
-      const { M1, M2 } = args;
-      console.log('M1', M1)
-      const ANGLE = Math.round((args.AXES[0] + 1) * 89);
+      const { M1, M2, AXES } = args;
+      const ANGLE =  Math.round((AXES[0] + 1) * 89)
+      console.log('ANGLE', ANGLE)
 
-      if (!rotationAction || rotationAction.isResolved()) {
-        console.log('ANGLE', ANGLE);
-        rotationAction = MakeQuerablePromise(
-          motorC.gotoAngle(ANGLE, 10)
-          );
-      }
+      // if (!rotationAction || rotationAction.isResolved()) {
+      //   console.log('ANGLE', ANGLE);
+      //   rotationAction = MakeQuerablePromise(
+      //     motorC.gotoAngle(ANGLE, 10)
+      //     );
+      // }
 
       if (M1 !== 0 && !state.M1) {
         state.M1 = M1;
