@@ -41,7 +41,7 @@ poweredUP.on("discover", async (hub) => {
   console.log("All lego hub connected");
 
   motorC.on('absolute', ({angle})=>{
-    console.log('motorC.on absolute', angle);
+    // console.log('motorC.on absolute', angle);
   });
 
   lightD.setBrightness(5);
