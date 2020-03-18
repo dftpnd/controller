@@ -5,70 +5,81 @@ const io = require('socket.io')(http);
 const PoweredUP = require("node-poweredup");
 const poweredUP = new PoweredUP.PoweredUP();
 
-function MakeQuerablePromise(promise) {
-  // Don't create a wrapper for promises that can already be queried.
-  if (promise.isResolved) return promise;
+const ANGLE_MAX = 63;
+const LEFT = -1;
+const STR = 0;
+const RIGHT = 1;
 
-  var isResolved = false;
-  var isRejected = false;
+const transformServoAngel = (angle) => angle * ANGLE_MAX ;
 
-  // Observe the promise, saving the fulfillment in a closure scope.
-  var result = promise.then(
-     function(v) { isResolved = true; return v; }, 
-     function(e) { isRejected = true; throw e; });
-  result.isFulfilled = function() { return isResolved || isRejected; };
-  result.isResolved = function() { return isResolved; }
-  result.isRejected = function() { return isRejected; }
-  return result;
-}
+const statusPos = (axe) => {
+  const posAngle = Math.round(transformServoAngel(axe));
 
-const pureAngel = (dirtyAngel) => {
-  if(dirtyAngel > 91 || dirtyAngel < 100){
-    return 89;
+  if(posAngle > 10){
+    return RIGHT;
   }
-  return dirtyAngel - 7;
+
+  if(posAngle < -10){
+    return LEFT;
+  }
+
+  return STR;
 }
 
 poweredUP.on("discover", async (hub) => { 
   console.log(`Discovered ${hub.name}!`);
-  // hub.batteryLevel
-  console.log('batteryLevel:', hub.batteryLevel)
+
   await hub.connect(); 
+
+  console.log('batteryLevel:', hub.batteryLevel)
+
   const motorA = await hub.waitForDeviceAtPort("A"); 
   const motorB = await hub.waitForDeviceAtPort("B");
   const motorC = await hub.waitForDeviceAtPort("C");
-
-
-  // const lightD = await hub.waitForDeviceAtPort("D");
+  const lightD = await hub.waitForDeviceAtPort("D");
   
-  console.log("Lego hub connected");
+  console.log("All lego hub connected");
+
+  motorC.on('absolute', ({angle})=>{
+    console.log('motorC.on absolute', angle);
+  });
+
+  lightD.setBrightness(5);
 
 
-  // lightD.setBrightness(100);
-  // motorC.gotoAngle(120);
-
-  let rotationAction;
-
-
-  io.on('connection', function(socket){
+  io.on('connection', async function(socket){
     console.log('io on connection')
     const state = {
       M1: false,
       M2: false,
+      angle: STR,
     };
 
-    socket.on('action', function(args) {
+
+    socket.on('action', async function(args) {
       const { M1, M2, AXES } = args;
-      const dirtyAngel =  Math.round((AXES[0] + 1) * 89)
+      const status = statusPos(AXES[0]);
+      
+
+        if(status === STR && state.angle !== STR){
+          
+          motorC.gotoAngle(0, 10)
+          state.angle = status;
+
+        }else if(status === LEFT && state.angle !== LEFT){
+
+          motorC.gotoAngle(-60, 10)
+          state.angle = status;
+
+        }else if(status === RIGHT && state.angle !== RIGHT){
+
+          motorC.gotoAngle(60, 10)
+          state.angle = status;
+        }
+
+        
 
       
-      // console.log('ANGLE', ANGLE)
-
-      if (!rotationAction || rotationAction.isResolved()) {
-        console.log('dirtyAngel', dirtyAngel);
-        rotationAction = MakeQuerablePromise(motorC.gotoAngle(pureAngel(dirtyAngel), 10));
-      }
-
       if (M1 !== 0 && !state.M1) {
         state.M1 = M1;
         motorA.setPower(100);
@@ -88,7 +99,9 @@ poweredUP.on("discover", async (hub) => {
         motorA.brake();
         motorB.brake();
       }
+
     });
+
   });
 });
 
